@@ -1,5 +1,7 @@
 import React from 'react'; // Importação do React
-import { Grid, Box, Typography, Card, CardContent } from '@material-ui/core'; // Importação de elementos visuais
+import { Grid, Box, Typography, Card, CardContent, CardActions, Button } from '@material-ui/core'; // Importação de elementos visuais
+import {Link} from 'react-router-dom'
+import '../../Login/styles.css'
 
 export default function Concluido() {
     return (
@@ -20,9 +22,14 @@ export default function Concluido() {
                                         Nome do solicitante
                                     </Typography>
                                     <Typography style={{marginTop:20}} color="textPrimary" gutterBottom>
-                                        Local
+                                        Erro
                                     </Typography>
                                 </CardContent>
+                                <CardActions style={{ justifyContent: 'space-around' }}>
+                                    <Link to="/detalhes" className='link'>
+                                    <Button size="small" style={{ color: 'black' }}>Detalhes</Button>
+                                    </Link>
+                                </CardActions>
                             </Card>
                         ))}
 
