@@ -1,5 +1,5 @@
 import React from 'react'; // Importação do React
-import { Grid, Box, Typography, Card, CardContent, CardActions, Button } from '@material-ui/core'; // Importação de elementos visuais
+import { Tooltip,Grid, Box, Typography, Card, CardContent, CardActions, Button } from '@material-ui/core'; // Importação de elementos visuais
 import {Link} from 'react-router-dom'
 import '../../Login/styles.css'
 
@@ -26,9 +26,11 @@ export default function Concluido() {
                                     </Typography>
                                 </CardContent>
                                 <CardActions style={{ justifyContent: 'space-around' }}>
-                                    <Link to="/detalhes" className='link'>
+                                <Tooltip placement="top" title="Ver detalhes">
+                                    <Link to="/detalhes" className='link'> {/* Substituir propriedade To com os parâmetros corretos */}
                                     <Button size="small" style={{ color: 'black' }}>Detalhes</Button>
                                     </Link>
+                                    </Tooltip>
                                 </CardActions>
                             </Card>
                         ))}
