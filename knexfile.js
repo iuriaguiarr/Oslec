@@ -4,14 +4,13 @@ module.exports = {
   development: {
     client: 'sqlite3',
     connection: {
-      filename: './database/db.sqlite'
+      filename: './database/oslec.sqlite'
     },
     migrations: {
       directory: './database/migrations'
     },
     useNullAsDefault: true,
   },
-
   staging: {
     client: 'postgresql',
     connection: {
