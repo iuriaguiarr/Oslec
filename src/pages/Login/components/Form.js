@@ -71,14 +71,12 @@ export default function Form() {
 
         } else { // Sem nenhum erro
 
-            if (buttonOne === 'contained' && code === "123456") { // Autentica Suporte
+            if (buttonOne === 'contained') { // Autentica Suporte
                 history.push('/suporte') // Redirecionando para painel de suporte
-            } else if ((buttonTwo === 'contained' && code === "654321") || (buttonThree === 'contained' &&code === "010203" )) { // Autentica Cliente
+            } else if ((buttonTwo === 'contained') || buttonThree === 'contained') { // Autentica Cliente
                 localStorage.setItem("User","Cliente");
                 history.push('/cliente') // Redirecionando para painel de clientes
-            }else if(code !== "654321" && code !== "123456" && code !== "010203") {
-                toast.error('Senha incorreta.', error) // Dispara erro
-            } 
+            }
             else {
                 toast.error('Ocorreu um erro duante o seu login.', error) // Dispara erro
             }
