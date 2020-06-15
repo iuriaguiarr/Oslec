@@ -72,10 +72,43 @@ export default function Form() {
         } else { // Sem nenhum erro
 
             if (buttonOne === 'contained') { // Autentica Suporte
-                history.push('/suporte') // Redirecionando para painel de suporte
+
+                if (code === '222222'){
+                    history.push('/suporte') // Redirecionando para painel de suporte
+                    localStorage.setItem("User","Suporte");    
+                    localStorage.setItem("Codigo","222222");    
+                    localStorage.setItem("Nome","Iuri do Front");    
+                    localStorage.setItem("Email","iuri.front@gmail.com");    
+                }else{
+                    toast.error('Código de acesso incorreto.', error) // Dispara erro
+                    setCodeError(true) // Dá a cor vermelha ao input
+                    setTimeout(() => {
+                        setCodeError(false) // Remove a cor vermelha do input em 5s
+                    }, 5000)
+                }   
+
             } else if ((buttonTwo === 'contained') || buttonThree === 'contained') { // Autentica Cliente
-                localStorage.setItem("User","Cliente");
-                history.push('/cliente') // Redirecionando para painel de clientes
+                
+                if (code === '654321'){
+                    history.push('/cliente') // Redirecionando para painel de clientes
+                    localStorage.setItem("User","Cliente");
+                    localStorage.setItem("Codigo","654321");    
+                    localStorage.setItem("Nome","Emerson do Karatê");    
+                    localStorage.setItem("Email","emerson.karate@gmail.com");
+                }else if (code === '123456'){
+                    history.push('/cliente') // Redirecionando para painel de clientes
+                    localStorage.setItem("User","Cliente");
+                    localStorage.setItem("Codigo","123456");    
+                    localStorage.setItem("Nome","Torres do Habbo");    
+                    localStorage.setItem("Email","torres.habbo@gmail.com");
+                }
+                else{
+                    toast.error('Código de acesso incorreto.', error) // Dispara erro
+                    setCodeError(true) // Dá a cor vermelha ao input
+                    setTimeout(() => {
+                        setCodeError(false) // Remove a cor vermelha do input em 5s
+                    }, 5000)
+                }
             }
             else {
                 toast.error('Ocorreu um erro duante o seu login.', error) // Dispara erro

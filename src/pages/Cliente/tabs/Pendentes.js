@@ -6,9 +6,9 @@ import {
     DialogContentText, DialogActions
 } from '@material-ui/core'
 
-import { Add, InfoOutlined, ErrorOutlineOutlined, DescriptionOutlined } from '@material-ui/icons'
+import { Add, InfoOutlined, ErrorOutlineOutlined, DescriptionOutlined, SettingsPowerTwoTone } from '@material-ui/icons'
 
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 import '../../Login/styles.css'
 
@@ -18,9 +18,22 @@ import { toast } from 'react-toastify'
 
 import 'react-toastify/dist/ReactToastify.css'
 
+import api from '../../../services/api'
+
 const colorTheme = createMuiTheme({ palette: { primary: { main: '#2ecc71', contrastText: '#fff' } } })
 
 export default function Pendentes() {
+
+    const history = useHistory()
+
+    const [chamados, setChamados] = React.useState([])
+
+    React.useEffect(() => {
+        api.get('/chamado-list/Pendente'
+        ).then(response => {
+            setChamados(response.data);
+        })
+    }, []);
 
     const wid = window.innerWidth
     var pos = 'top-right'
@@ -54,15 +67,14 @@ export default function Pendentes() {
     const handleClickOpen2 = () => { setOpen2(true) }
     const handleClose2 = () => { setOpen2(false) }
 
-    function handleRegister() {
+    function reload(){
+            api.get('/chamado-list/Pendente'
+            ).then(response => {
+                setChamados(response.data);
+            })
+    }
 
-        if (erro === '') {
-            toast.error('Digite o nome do erro.', error)
-            setErroError(true)
-            setTimeout(() => {
-                setErroError(false)
-            }, 5000)
-        }
+    async function handleRegister() {
 
         if (tipo === '') {
             toast.error('Digite o tipo do erro.', error)
@@ -80,20 +92,35 @@ export default function Pendentes() {
             }, 5000)
         }
 
-        if (description !== '' && tipo !== '' && erro !== ''){
-            
-            
-            // Executa a função de cadsatrar um chamado
+        if (description !== '' && tipo !== ''){
+            try {
+                const tipoDeErro = tipo
+                const descricaoDeErro = description
+                const fk_client = localStorage.getItem('Codigo')
+                api.post('/chamado', {tipoDeErro, descricaoDeErro, fk_client})
 
-            /*
-                Variáveis: 
-                    erro = Titulo do erro
-                    tipo = Tipo do erro
-                    description = descrição do erro
-            */
+                await reload();
+
+                setOpen(false)
+
+                setTipo('')
+                setDescription('')
+
+            } catch (error) {
+                
+                toast.error('Ocorreu um erro ao emitir o seu chamado.', error)
+
+            }
 
         }
 
+    }
+    
+    async function handleCancel(){
+        api.delete('/chamado/'+localStorage.getItem('Cancel'));
+        await reload();
+
+        setOpen2(false)
     }
 
     return (
@@ -111,27 +138,26 @@ export default function Pendentes() {
                 <Grid item xs={12}>
                     <Grid container direction="row" justify="center" alignItems="flex-start" spacing={2}>
 
-                        {[0, 1].map((value) => (
+                    {chamados.map((chamado) => (
                             <Card style={{ minWidth: 290, maxWidth: 290, margin: 20 }} variant="contained">
                                 <CardContent>
                                     <Typography style={{ textAlign: 'center', fontWeight: 'bold' }} color="textPrimary" gutterBottom>
-                                        Título do chamado
+                                    {chamado.tipoDeErro}
                                     </Typography>
                                     <Typography style={{ marginTop: 20 }} color="textPrimary" gutterBottom>
-                                        Nome do solicitante
+                                    <strong>Descrição: </strong>{chamado.descricaoDeErro}    
                                     </Typography>
                                     <Typography style={{ marginTop: 20 }} color="textPrimary" gutterBottom>
-                                        Erro
+                                    <strong>Horário: </strong>{chamado.dataHoraDoChamado}
                                     </Typography>
                                 </CardContent>
                                 <CardActions style={{ justifyContent: 'space-around' }}>
                                     <Tooltip placement="top" title="Cancelar chamado">
-                                        <Button size="small" onClick={handleClickOpen2} style={{ color: 'red' }}>Cancelar</Button>
+                                        <Button size="small" onMouseUp={() => {localStorage.setItem('Cancel',chamado.codigo)}} onClick={handleClickOpen2} style={{ color: 'red' }}>Cancelar</Button>
                                     </Tooltip>
                                     <Tooltip placement="top" title="Ver detalhes">
                                         <Link to="/detalhes" className='link'> {/* Substituir propriedade To com os parâmetros corretos */}
-
-                                            <Button size="small" style={{ color: 'black' }}>Detalhes</Button>
+                                            <Button onClick={() => {localStorage.setItem("CodigoErro",chamado.codigo)}} size="small" style={{ color: 'black' }}>Detalhes</Button>
                                         </Link>
                                     </Tooltip>
                                 </CardActions>
@@ -149,32 +175,6 @@ export default function Pendentes() {
 
                 <DialogContent>
 
-                    <Box width={300} mt={2}>
-                        <Tooltip placement="top" title="Título do Erro">
-                            <TextField
-                                error={erroError}
-                                value={erro}
-                                onChange={e => setErro(e.target.value)}
-                                fullWidth
-                                variant='outlined'
-                                size='small'
-                                required={true}
-                                label='Erro'
-                                color='primary'
-                                inputProps={{
-                                    maxLength: 27,
-                                    spellCheck: false
-                                }}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position='start'>
-                                            <ErrorOutlineOutlined />
-                                        </InputAdornment>
-                                    )
-                                }}
-                            />
-                        </Tooltip>
-                    </Box>
                     <Box width={300} mt={2}>
                         <Tooltip placement="top" title="Por exemplo: Internet, Energia, Outro...">
                             <TextField
@@ -257,7 +257,7 @@ export default function Pendentes() {
 
                 <DialogActions style={{ justifyContent: 'center' }}>
 
-                    <Button style={{ color: 'green' }}> Sim </Button> {/* Ao clicar aqui, realizar função de cancelar o chamado */}
+                    <Button onClick={handleCancel} style={{ color: 'green' }}> Sim </Button> {/* Ao clicar aqui, realizar função de cancelar o chamado */}
 
                     <Button onClick={handleClose2} style={{ color: 'red' }}> Não </Button>
 

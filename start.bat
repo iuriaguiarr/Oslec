@@ -1,0 +1,1 @@
+cd Backend && start start.bat && cd ../ && npm start

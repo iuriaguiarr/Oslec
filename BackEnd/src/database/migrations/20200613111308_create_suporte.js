@@ -3,6 +3,7 @@ exports.up = function (knex) {
       table.string('codigo').notNullable().primary();
       table.string('name').notNullable();
       table.string('email').unique().notNullable();
+
   });
 };
 
