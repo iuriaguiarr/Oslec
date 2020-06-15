@@ -1,5 +1,6 @@
 exports.up = function (knex) {
   return knex.schema.createTable('chamado', function (table) {
+      //Criando a tabela Chamado com suas colunas e definições de chaves.
       table.string('codigo').notNullable().primary();
 
       table.timestamp('dataHoraDoChamado').notNullable();
