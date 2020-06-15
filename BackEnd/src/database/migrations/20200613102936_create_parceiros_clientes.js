@@ -5,7 +5,7 @@ exports.up = function (knex) {
       table.string('email').unique().notNullable();
   });
 };
-
+//Criação da tabela "parceiros_clientes' com ORM KNEX.
 exports.down = function (knex) {
   return knex.schema.dropTable('parceiros_clientes');
 };
