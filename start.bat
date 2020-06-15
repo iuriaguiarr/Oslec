@@ -1,1 +1,1 @@
-cd Backend && start start.bat && cd ../ && npm start
+cd Backend && start start.bat && cd ../ && npm install && npm start
